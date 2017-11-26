@@ -39,12 +39,37 @@ $(document).ready(function(){
 		let email = $("[name='email']").val();
 		let nickname = $("[name='nickname']").val();
 		let password = $("[name='password']").val().hashCode();
+		$.ajaxSetup({                  
+			beforeSend: function(xhr, settings) {   
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));                                                                  
+					}      
+				}              
+			});  
 		$.ajax({
 			type:"POST",
 			url:"/registration/",
 			data:{"email":email, "nickname":nickname, "password":password},
 			success:function(){location.href="/registration/"}
 			});		
+		return false;
+		});
+	$("#signin").submit(function(){
+		let nickname = $("[name='username']").val();
+		let password = $("[name='pass']").val().hashCode();
+		$.ajaxSetup({                  
+			beforeSend: function(xhr, settings) {   
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));                                                                  
+					}      
+				}              
+			});  
+		$.ajax({
+			type:"POST",
+			url:"/signin/",
+			data:{"nickname":nickname, "password":password},
+			succes:function(){location.href=""}
+			});
 		return false;
 		});
 });

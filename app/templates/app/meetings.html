@@ -4,7 +4,7 @@
 			<header>
 				<div class="container">
 					<h1>Information about meetings</h1>
-					{%if meeting%}
+					{%if meeting and permtoken%}
 					<article>
 						{%for m in meeting%}
 						<header>
@@ -42,9 +42,10 @@
 								</div>
 							</div>
 						</div>
-						{%endif%}
-						{%if not meeting%}
+						{%elif not meeting%}
 							<div>No meetings for now</div>
+						{%elif not permtoken%}
+							<div>You're not allowed to see meetings</div>
 						{%endif%}
 					</article>
 				</div>

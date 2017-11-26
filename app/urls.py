@@ -8,5 +8,7 @@ urlpatterns = [
             url(r"^meetings/$", views.meetings, name="meetings"),
             url(r"^postNewLection/$", views.lectures, name="postNewLecure"),
             url(r"^downloads/(.*)/(.*)/$", views.download, name="download"),
-            url(r"^registration/$", views.registration, name="registration")
+            url(r"^registration/$", views.registration, name="registration"),
+            url(r"^signin/$", views.signin, name="signin"),
+            url(r"^logout/$", views.signout, name="logout")
         ]
