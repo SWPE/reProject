@@ -40,13 +40,32 @@ def homework(request):
                 )
         for f in request.FILES.getlist("homework"):
             CustomFile.objects.create(      
-                    file_name = f.name,
-                    file_source = handle_file(f, f.name, "homeworks"),
+                    file_name = normalizeName(f.name),
+                    file_source = handle_file(f, normalizeName(f.name), "homeworks"),
                     hash = makeHash(request.POST["subject"], hashkey)
                 )
         return redirect("/homework/")
 def info(request):
-    return render(request, "app/info.html", {})
+    if request.method == "GET":
+        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all()}
+        return render(request, "app/info.html", context)
+    if request.method == "POST":
+        import datetime 
+        hashkey = datetime.datetime.now()
+        ImportantInfo.objects.create(
+                    title = request.POST["title"],
+                    info = request.POST["info"],
+                    date = hashkey,
+                    hash = makeHash(request.POST["title"], hashkey)
+                )
+        for f in request.FILES.getlist("data"):
+            CustomFile.objects.create(
+                        file_name = normalizeName(f.name),
+                        file_source = handle_file(f,normalizeName(f.name),"info"),
+                        hash = makeHash(request.POST["title"], hashkey)
+                    )
+        return redirect("/info/")
+
 def meetings(request):
     context = {"meeting":Meeting.objects.all(), "people":Person.objects.all()}
     return render(request, "app/meetings.html", context)
@@ -67,3 +86,6 @@ def makeHash(sth, hashkey):
     import datetime
     import hashlib
     return hashlib.sha256(b"%s%s" % (sth.encode("utf-8"), hashkey.__str__().encode("utf-8"))).hexdigest()
+def normalizeName(name):
+    sep = "_"
+    return sep.join(name.split(" "))

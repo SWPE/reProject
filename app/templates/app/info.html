@@ -55,12 +55,20 @@
 												</tr>
 											</thead>
 											<tbody>
+												{%for i in info%}
 												<tr>
-													<td> <span>Test</span></td>
-													<td><span>Lorem ipsum</span></td>
-													<td><a href="#">Test</a></td>
-													<td><span>2000-00-00</span></td>
+													<td>{{i.title}}</td>
+													<td>{{i.info}}</td>
+													<td>
+														{%for f in files%}
+														{%if f.hash == i.hash%}
+															<a href={{f.file_source}}>{{f.file_name}},</a>
+														{%endif%}
+														{%endfor%}
+													</td>
+													<td>Published {{i.date}}</td>
 												</tr>
+												{%endfor%}
 											</tbody>
 										</table>
 									</div>
@@ -68,6 +76,22 @@
 							</div>
 						</div>
 						</p>
+						<form class="form-horizontal" role="form" name="newInfo" method="POST" action="/info/" enctype="multipart/form-data">
+							{%csrf_token%}
+							<div class="form-group">
+								<label class="control-label col-md-2" for="title">Title:</label>
+								<div class="col-md-3"><input class="form-control" type="text" name="title" placeholder="Enter the subject"/></div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-2" for="info">Info:</label>
+								<div class="col-md-3"><textarea name="info"></textarea></div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-2" for="file">Attach file:</label>
+								<div class="col-md-3"><input type="file" name="data" multiple/></div>
+								<button class="btn btn-success" type="submit">Add information												</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</header>
