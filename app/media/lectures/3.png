@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+  	<title>ПЗПИ-17-3</title>
+  	<base href="/">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="icon" type="image/png" href="./assets/img/favicon.ico">
+	<script src="./assets/scripts/jquery-3.2.1.min.js"></script>
+	<script src="./assets/scripts/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./assets/styles/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="./assets/styles/main.css">
+</head>
+<body>
+	<app-root>Loading</app-root>
+	<footer></footer>
+<script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
+</html>
