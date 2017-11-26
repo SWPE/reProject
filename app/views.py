@@ -2,16 +2,29 @@ from django.shortcuts import render, redirect
 import os
 import hashlib
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from .models import *
+from django.contrib.auth.decorators import login_required
 
 def index(request):
-    context = {"people":Person.objects.all()}
+    authtoken = False
+    permtoken = False
+    if request.user.is_authenticated():
+        authtoken = True 
+    context = {"people":Person.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
     return render(request, "app/index.html", context)
+
 def lectures(request):
+    authtoken = False
+    permtoken = False
+    if request.user.is_authenticated() and request.user.has_perm("app.change_lecture"):
+        permtoken = True
+    if request.user.is_authenticated():
+        authtoken = True
     if request.method == "GET":
-        context = {"lectures":Lecture.objects.all(), "files":CustomFile.objects.all()}
+        context = {"lectures":Lecture.objects.all(), "files":CustomFile.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
         return render(request, "app/lectures.html", context)
     if request.method == "POST":
         Lecture.objects.create(
@@ -26,8 +39,14 @@ def lectures(request):
                 )
         return redirect("/lectures/")
 def homework(request):
+    authtoken = False
+    permtoken = False
+    if request.user.is_authenticated() and request.user.has_perm("app.change_homework"):
+        permtoken = True       
+    if request.user.is_authenticated():
+        authtoken = True 
     if request.method == "GET":
-        context = {"homeworks":Homework.objects.all(), "files":CustomFile.objects.all()}
+        context = {"homeworks":Homework.objects.all(), "files":CustomFile.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
         return render(request, "app/homework.html", context)
     if request.method == "POST":
         import datetime
@@ -47,8 +66,14 @@ def homework(request):
                 )
         return redirect("/homework/")
 def info(request):
+    authtoken = False
+    permtoken = False
+    if request.user.is_authenticated() and request.user.has_perm("app.change_importantinfo"):
+        permtoken = True       
+    if request.user.is_authenticated():
+        authtoken = True 
     if request.method == "GET":
-        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all()}
+        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
         return render(request, "app/info.html", context)
     if request.method == "POST":
         import datetime 
@@ -68,7 +93,13 @@ def info(request):
         return redirect("/info/")
 
 def meetings(request):
-    context = {"meeting":Meeting.objects.all(), "people":Person.objects.all()}
+    authtoken = False
+    permtoken = False
+    if request.user.is_authenticated() and request.user.groups.filter(name="members").exists():
+        permtoken = True       
+    if request.user.is_authenticated():
+        authtoken = True 
+    context = {"meeting":Meeting.objects.all(), "people":Person.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
     return render(request, "app/meetings.html", context)
 def download(request, dirname, filename):
     path = "app/media/%s/%s" % (dirname, filename) 
@@ -87,6 +118,26 @@ def registration(request):
         for user in User.objects.filter(username=request.POST["nickname"]):
             g.user_set.add(user)
         return redirect("/registration/")
+def signin(request):
+    if request.method == "GET":
+        return render(request, "app/signin.html", {})
+    if request.method == "POST":
+        user = authenticate(username=request.POST["nickname"], password=makeHash(request.POST["password"]))
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponse("")
+            else:
+                return HttpResponse("Not active")
+        else:
+            return HttpResponse("Not authorized")
+
+
+def signout(request):
+   logout(request)
+   return redirect("/")
+
+
 
 def handle_file(file, name, storage):
     for data in file.chunks():

@@ -42,6 +42,7 @@
 							</div>
 						</div>
 						</p>
+						{%if permtoken%}
 						<form class="form-horizontal" role="form" name="newInfo" method="POST" action="/info/" enctype="multipart/form-data">
 							{%csrf_token%}
 							<div class="form-group">
@@ -58,6 +59,7 @@
 								<button class="btn btn-success" type="submit">Add information												</button>
 							</div>
 						</form>
+						{%endif%}
 					</div>
 				</div>
 			</header>

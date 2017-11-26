@@ -26,7 +26,13 @@
 							<li><a href="{%url 'homework' %}">Homework</a></li>
 							<li><a href="{%url 'info' %}">Info</a></li>
 							<li><a href="{%url 'meetings' %}">Meetings</a></li>
+							{%if not authtoken%}
 							<li><a href="{%url 'registration' %}">Registration</a></li>
+							<li><a href="{% url 'signin' %}">Sign In</a></li>
+							{%endif%}
+							{%if authtoken%}
+							<li><a href="{%url 'logout' %}">Log out</a></li>
+							{%endif%}
 						</ul>
 					</div>
 				</div>
