@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 import os
 import hashlib
-
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from .models import *
 
@@ -76,16 +77,28 @@ def download(request, dirname, filename):
         response = HttpResponse(fh.read(), content_type="application/force-download")
         response['Content-Disposition'] = 'attachment; filename=' + filename
         return response
+
+def registration(request):
+    if request.method == "GET":
+        return render(request,"app/registration.html", {})
+    if request.method == "POST":
+        User.objects.create_user(request.POST["nickname"], request.POST["email"], makeHash(request.POST["password"]))
+        g = Group.objects.get(name="user")
+        for user in User.objects.filter(username=request.POST["nickname"]):
+            g.user_set.add(user)
+        return redirect("/registration/")
+
 def handle_file(file, name, storage):
     for data in file.chunks():
         with open("app/media/%s/%s" % (storage, name), "ab") as f:
             f.write(data)
     return "/downloads/%s/%s" % (storage, name)
 
-def makeHash(sth, hashkey):
-    import datetime
+def makeHash(sth, hashkey=""):
     import hashlib
-    return hashlib.sha256(b"%s%s" % (sth.encode("utf-8"), hashkey.__str__().encode("utf-8"))).hexdigest()
+    if hashkey:
+        return hashlib.sha256(b"%s%s" % (sth.encode("utf-8"), hashkey.__str__().encode("utf-8"))).hexdigest()
+    return hashlib.sha256(b"%s" % sth.encode("utf-8")).hexdigest()
 def normalizeName(name):
     sep = "_"
     return sep.join(name.split(" "))
