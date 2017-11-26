@@ -34,3 +34,11 @@ class CustomFile(models.Model):
     file_name = models.CharField(max_length=50)
     file_source = models.CharField(max_length=500)
     hash = models.CharField(max_length=500)
+    def __str__(self):
+        return self.file_name
+
+class ImportantInfo(models.Model):
+    title = models.CharField(max_length=50)
+    info = models.CharField(max_length=1000)
+    date = models.DateField()
+    hash = models.CharField(max_length=500)

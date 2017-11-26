@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 import os
 import hashlib
-
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from .models import *
 
@@ -40,13 +41,32 @@ def homework(request):
                 )
         for f in request.FILES.getlist("homework"):
             CustomFile.objects.create(      
-                    file_name = f.name,
-                    file_source = handle_file(f, f.name, "homeworks"),
+                    file_name = normalizeName(f.name),
+                    file_source = handle_file(f, normalizeName(f.name), "homeworks"),
                     hash = makeHash(request.POST["subject"], hashkey)
                 )
         return redirect("/homework/")
 def info(request):
-    return render(request, "app/info.html", {})
+    if request.method == "GET":
+        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all()}
+        return render(request, "app/info.html", context)
+    if request.method == "POST":
+        import datetime 
+        hashkey = datetime.datetime.now()
+        ImportantInfo.objects.create(
+                    title = request.POST["title"],
+                    info = request.POST["info"],
+                    date = hashkey,
+                    hash = makeHash(request.POST["title"], hashkey)
+                )
+        for f in request.FILES.getlist("data"):
+            CustomFile.objects.create(
+                        file_name = normalizeName(f.name),
+                        file_source = handle_file(f,normalizeName(f.name),"info"),
+                        hash = makeHash(request.POST["title"], hashkey)
+                    )
+        return redirect("/info/")
+
 def meetings(request):
     context = {"meeting":Meeting.objects.all(), "people":Person.objects.all()}
     return render(request, "app/meetings.html", context)
@@ -57,13 +77,28 @@ def download(request, dirname, filename):
         response = HttpResponse(fh.read(), content_type="application/force-download")
         response['Content-Disposition'] = 'attachment; filename=' + filename
         return response
+
+def registration(request):
+    if request.method == "GET":
+        return render(request,"app/registration.html", {})
+    if request.method == "POST":
+        User.objects.create_user(request.POST["nickname"], request.POST["email"], makeHash(request.POST["password"]))
+        g = Group.objects.get(name="user")
+        for user in User.objects.filter(username=request.POST["nickname"]):
+            g.user_set.add(user)
+        return redirect("/registration/")
+
 def handle_file(file, name, storage):
     for data in file.chunks():
         with open("app/media/%s/%s" % (storage, name), "ab") as f:
             f.write(data)
     return "/downloads/%s/%s" % (storage, name)
 
-def makeHash(sth, hashkey):
-    import datetime
+def makeHash(sth, hashkey=""):
     import hashlib
-    return hashlib.sha256(b"%s%s" % (sth.encode("utf-8"), hashkey.__str__().encode("utf-8"))).hexdigest()
+    if hashkey:
+        return hashlib.sha256(b"%s%s" % (sth.encode("utf-8"), hashkey.__str__().encode("utf-8"))).hexdigest()
+    return hashlib.sha256(b"%s" % sth.encode("utf-8")).hexdigest()
+def normalizeName(name):
+    sep = "_"
+    return sep.join(name.split(" "))
