@@ -110,8 +110,12 @@ def download(request, dirname, filename):
         return response
 
 def registration(request):
+    authtoken = False
+    if request.user.is_authenticated(): 
+        authtoken = True
+    context = {"authtoken":authtoken}
     if request.method == "GET":
-        return render(request,"app/registration.html", {})
+        return render(request,"app/registration.html", context)
     if request.method == "POST":
         User.objects.create_user(request.POST["nickname"], request.POST["email"], makeHash(request.POST["password"]))
         g = Group.objects.get(name="user")
@@ -119,8 +123,12 @@ def registration(request):
             g.user_set.add(user)
         return redirect("/registration/")
 def signin(request):
+    authtoken = False
+    if request.user.is_authenticated(): 
+        authtoken = True
+    context = {"authtoken":authtoken}
     if request.method == "GET":
-        return render(request, "app/signin.html", {})
+        return render(request, "app/signin.html", context)
     if request.method == "POST":
         user = authenticate(username=request.POST["nickname"], password=makeHash(request.POST["password"]))
         if user is not None:

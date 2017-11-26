@@ -68,7 +68,7 @@ $(document).ready(function(){
 			type:"POST",
 			url:"/signin/",
 			data:{"nickname":nickname, "password":password},
-			succes:function(){location.href=""}
+			succes:function(){location.href="//"}
 			});
 		return false;
 		});

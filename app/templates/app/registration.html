@@ -1,9 +1,11 @@
 {%extends 'app/base.html'%}
 {%block content%}
+{%if not authtoken%}
 <form method="POST" id="registration">
 	<input type="email" name="email" required/>
 	<input type="text" name="nickname" placeholder="Enter the nickname" required>
 	<input type="password" name="password" placeholder="Enter the password" required>
 	<button>Register</button>
 </form>
+{%endif%}
 {%endblock%}
