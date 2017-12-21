@@ -2,9 +2,10 @@
 {%block content%}
 {%if not authtoken%}
 <form method="POST" id="registration">
-	<input type="email" name="email" required/>
-	<input type="text" name="nickname" placeholder="Enter the nickname" required>
+	<input type="email" name="email" placeholder="Enter the email" required/>
+	<input type="text" name="nickname" placeholder="Enter the nickname(case is not ignored)" required>
 	<input type="password" name="password" placeholder="Enter the password" required>
+	<input type="password" name="passwordT" placeholder="Enter the password" required>
 	<button>Register</button>
 </form>
 {%endif%}

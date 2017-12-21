@@ -32,6 +32,7 @@
     letter-spacing: 3px;
     text-align: center;
     text-transform:uppercase;
+/*Logo(is used to shape the width and height of our image logo*/
 }
 #navbrand{
 	width:250px;
@@ -39,9 +40,7 @@
 	background-image:url(Logotop.png) no-repeat;
 	
 }
-
-
-
+/*Body(color,text,scrolling)(don't touch webkit)*/
 body{
     background:whitesmoke;
     font-family: Quicksand,sans-serif;
@@ -53,17 +52,19 @@ body{
 
     margin-top:60px ;
 }
+/*Headers(black looks the best with this design)*/
 h1, h2, h3, h4, h5, h6{
     font-family:Quicksand,sans-serif;
     font-weight:100;
     color:black;
-	font-size:25px;
+    font-size:25px;
     padding-top: 30px;
 }
+/*Тext(don't change margin and padding,please)*/
 p{
-	font-family:'Source Sans Pro',sans-serif;
-	padding-top:60px;
-	color:gray;
+    font-family:'Source Sans Pro',sans-serif;
+    padding-top:60px;
+    color:gray;
     font-size: 15px;
     line-height: 25px;
     margin-bottom: 10px;

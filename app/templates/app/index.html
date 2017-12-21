@@ -15,8 +15,8 @@
 				<div class="container">
 					<div class="row centered">
 						<div class="col-lg-12">
-							<h2>Zagolovok 1</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras interdum lacus lectus, vitae lobortis purus sollicitudin at. Aenean iaculis euismod urna. In condimentum sed felis at hendrerit. Praesent laoreet libero nulla, vitae convallis dolor facilisis a. Maecenas tempus tellus vitae laoreet pharetra. Sed lorem nibh, lacinia non nisl nec, aliquam placerat odio. Proin vel urna pharetra metus luctus rutrum.</p>
+							<h2>The Purpose</h2>
+							<p>The purpose of this site is to provide students of our group with lots of useful information like:our meetings,consultations,lecture files,presentations and so on...The team of our developers tried to made the interface of the website both user-friendly and useful ath the same time.You're welcome!  </p>
 							<h2>Students Table</h2>
 						</div>
 					</div>
@@ -28,7 +28,9 @@
 						<tr>
 							<th>Id</th>
 							<th>Name</th>
+							{%if permtoken%}
 							<th>Phone Number</th>
+							{%endif%}
 						</tr>
 					</thead>
 					<tbody>
@@ -36,7 +38,9 @@
 						<tr>
 							<td>{{person.id}}</td>
 							<td>{{person.name}}</td>
+							{%if permtoken%}
 							<td>{{person.number}}</td>
+							{%endif%}
 						</tr>
 						{%endfor%}
 						</tr>

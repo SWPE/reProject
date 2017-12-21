@@ -13,6 +13,8 @@ def index(request):
     permtoken = False
     if request.user.is_authenticated():
         authtoken = True 
+    if authtoken and request.user.groups.filter(name="members").exists():
+        permtoken = True
     context = {"people":Person.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
     return render(request, "app/index.html", context)
 
@@ -66,31 +68,37 @@ def homework(request):
                 )
         return redirect("/homework/")
 def info(request):
-    authtoken = False
-    permtoken = False
-    if request.user.is_authenticated() and request.user.has_perm("app.change_importantinfo"):
+    """
+    This function is to render info.html page
+    request contains data which has been sent by user
+    """
+    #This part deals with GET request
+    authtoken = False #Defines if user authentificated
+    permtoken = False #Defines if user has permission to manipulate with chosen data
+    if request.user.is_authenticated() and request.user.has_perm("app.change_importantinfo"): #Check permissions
         permtoken = True       
-    if request.user.is_authenticated():
+    if request.user.is_authenticated(): #check authentification
         authtoken = True 
     if request.method == "GET":
-        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all(), "authtoken":authtoken, "permtoken":permtoken}
-        return render(request, "app/info.html", context)
-    if request.method == "POST":
+        context = {"info":ImportantInfo.objects.all(), "files":CustomFile.objects.all(), "authtoken":authtoken, "permtoken":permtoken} #Pass data to template
+        return render(request, "app/info.html", context) #render template
+    #This part deals with POST request. If some data has been sent from the form
+    if request.method == "POST": 
         import datetime 
-        hashkey = datetime.datetime.now()
-        ImportantInfo.objects.create(
+        hashkey = datetime.datetime.now() #Defines unique salt for hashing files
+        ImportantInfo.objects.create( #Create instance if info and add it to suitable table in the db
                     title = request.POST["title"],
                     info = request.POST["info"],
-                    date = hashkey,
-                    hash = makeHash(request.POST["title"], hashkey)
+                    date = hashkey, #Now hashkey is just a curtain date of uploading file
+                    hash = makeHash(request.POST["title"], hashkey) #Unique hash to link to tables
                 )
-        for f in request.FILES.getlist("data"):
-            CustomFile.objects.create(
+        for f in request.FILES.getlist("data"): #for each file from the form
+            CustomFile.objects.create( #create instance of file and add it to the db files
                         file_name = normalizeName(f.name),
                         file_source = handle_file(f,normalizeName(f.name),"info"),
-                        hash = makeHash(request.POST["title"], hashkey)
+                        hash = makeHash(request.POST["title"], hashkey) #Add unique hash to link certain fies with certain info
                     )
-        return redirect("/info/")
+        return redirect("/info/") #Redirect to this page if everything has been successfuly finished
 
 def meetings(request):
     authtoken = False

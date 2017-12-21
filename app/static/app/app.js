@@ -35,29 +35,32 @@ $.ajaxSetup({
 		}
 	});
 $(document).ready(function(){
-	$("#registration").submit(function(){
+	$("#registration").submit(function(){ //This function controls registration form
 		let email = $("[name='email']").val();
 		let nickname = $("[name='nickname']").val();
-		let password = $("[name='password']").val().hashCode();
+		let password = $("[name='password']").val().hashCode(); //Get password and hash it
+		let password2 = $("[name='passwordT']").val().hashCode();
 		$.ajaxSetup({                  
-			beforeSend: function(xhr, settings) {   
+			beforeSend: function(xhr, settings) {//Setup crossdomain methods to ajax   
 				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 					xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));                                                                  
 					}      
 				}              
-			});  
-		$.ajax({
-			type:"POST",
-			url:"/registration/",
-			data:{"email":email, "nickname":nickname, "password":password},
-			success:function(){location.href="/registration/"}
-			});		
+			});
+		if(password === password2){
+			$.ajax({//Send the response to the server
+				type:"POST",
+				url:"/registration/",
+				data:{"email":email, "nickname":nickname, "password":password},
+				success:function(){location.href="/registration/"}
+				});
+			}else{alert("Passwords are not the same");}		
 		return false;
 		});
 	$("#signin").submit(function(){
 		let nickname = $("[name='username']").val();
-		let password = $("[name='pass']").val().hashCode();
-		$.ajaxSetup({                  
+		let password = $("[name='pass']").val().hashCode();//Make hash of password
+		$.ajaxSetup({//The same setup                  
 			beforeSend: function(xhr, settings) {   
 				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 					xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));                                                                  
@@ -67,8 +70,8 @@ $(document).ready(function(){
 		$.ajax({
 			type:"POST",
 			url:"/signin/",
-			data:{"nickname":nickname, "password":password},
-			success:function(){location.href="/"}
+			data:{"nickname":nickname, "password":password},//Send data to the server
+			success:function(){location.href="/"}//If successful login redirect to main page
 			});
 		return false;
 		});
