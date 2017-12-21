@@ -52,7 +52,10 @@ $(document).ready(function(){
 				type:"POST",
 				url:"/registration/",
 				data:{"email":email, "nickname":nickname, "password":password},
-				success:function(){location.href="/registration/"}
+				success:function(){location.href="/"},
+				statusCode:{
+					500:function(){alert("Such user is already exists");}
+					}
 				});
 			}else{alert("Passwords are not the same");}		
 		return false;

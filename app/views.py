@@ -125,10 +125,11 @@ def registration(request):
     if request.method == "GET":
         return render(request,"app/registration.html", context)
     if request.method == "POST":
-        User.objects.create_user(request.POST["nickname"], request.POST["email"], makeHash(request.POST["password"]))
-        g = Group.objects.get(name="user")
-        for user in User.objects.filter(username=request.POST["nickname"]):
-            g.user_set.add(user)
+        if not request.user.is_authenticated():
+            User.objects.create_user(request.POST["nickname"], request.POST["email"], makeHash(request.POST["password"]))
+            g = Group.objects.get(name="user")
+            for user in User.objects.filter(username=request.POST["nickname"]):
+                g.user_set.add(user)
         return redirect("/registration/")
 def signin(request):
     authtoken = False
