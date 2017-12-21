@@ -1,11 +1,12 @@
 {%extends 'app/base.html'%}
 {%block content%}
 {%if not authtoken%}
-<form method="POST" id="signin">
-	
-	<input type="text" name="username" required>
-	<input type="password" name="pass" required>
-	<button>Authorize</button>
-</form>
+<div id="signin">
+	<form method="POST" id="signin">
+		<input type="text" name="username" placeholder="Enter the nickname(case sensitive)" required>
+		<input type="password" name="pass" placeholder = "Enter the password" required>
+		<button>Authorize</button>
+	</form>
+</div>
 {%endif%}
 {%endblock%}

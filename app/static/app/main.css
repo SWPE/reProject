@@ -1,14 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata|Nunito|Quicksand');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 @import url('https://fonts.googleapis.com/css?family=Dancing+Script');
-
+.navbar-fixed-top {
+	margin-top:-4px;
+}
 #headerwrap {
-    background: url("1.jpg") no-repeat  center top;
-    margin-top: -10px;
+    background: url("1.jpg") no-repeat;
     padding-top: 20px;
     text-align:center;
     background-attachment: fixed;
-    background-position: center top;
+    background-position: center 0.5%;
 	min-height:300px;
 
 
@@ -50,7 +51,6 @@ body{
     -webkit-font-smoothing: antialiased;
     -webkit-overflow-scrolling: touch;
 
-    margin-top:60px ;
 }
 /*Headers(black looks the best with this design)*/
 h1, h2, h3, h4, h5, h6{
@@ -118,4 +118,9 @@ nav{
 .navbar-default .navbar-nav > li > a:focus {
     color: gray;
 }
-
+#registration{
+	margin-top:70px;
+}
+#signin{
+	margin-top:70px;
+}
